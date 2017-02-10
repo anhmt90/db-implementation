@@ -1,0 +1,7 @@
+tbl/
+bin/
+Debug/
+.settings/
+.cproject
+.project
+

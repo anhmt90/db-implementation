@@ -1,0 +1,10 @@
+1. Import the project in Eclipse IDE. 
+2. Put the tbl-files into the folder named "tbl" so that the program can read them.
+3. main() function is in cpp/main.cpp.
+4. The newOrder and the dilivery transactions as well as the query is written as functions in operators/Operator.cpp.
+5. Use the 'task' variable at the beginning of main() to switch between the tasks (only task 3, 4, 5)
+6. The program can process the queries inputted from the command line by the users (no group by supported)
+7. User does not need a semicolon ";" at the end of query statements.
+8. Toggle the variable 'bool useGenCode' to false or true in main.cpp to use the real or the generated code (task4).
+9. Use make to compile the program.
+10. The programm is built and tested by Eclipse IDE on Xubuntu 16.04 LTS.
