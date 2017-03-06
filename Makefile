@@ -15,16 +15,16 @@ all: bin/main
 
 -include bin/*.d bin/*/*.d  
 
-bin/%.o: cpp/%.cpp
+bin/%.o: src/%.cpp
 	$(CHECKDIR)
 	/usr/bin/g++ -o$@ -c $(CXXFLAGS) $(DEPTRACKING) $< 
 
-bin/operators/%.o: operators/%.cpp
-	$(CHECKDIR)
-	/usr/bin/g++ -o$@ -c $(CXXFLAGS) $(DEPTRACKING) $< 
+#bin/operators/%.o: operators/%.cpp
+#	$(CHECKDIR)
+#	/usr/bin/g++ -o$@ -c $(CXXFLAGS) $(DEPTRACKING) $< 
 	
 	
-obj:=bin/Attribute.o bin/Generator.o bin/Table.o bin/Parser.o bin/Query.o bin/Schema.o bin/TPCC_Schema.o bin/Types.o bin/SemanticAnalyser.o bin/operators/Operator.o
+obj:=bin/Attribute.o bin/Table.o  bin/TPCC_Schema.o bin/Types.o
 
 bin/main: bin/main.o $(obj)
 	#g++ -std=c++11 -g -O3 -Wall -fPIC -rdynamic TranslatedQuery.cpp -shared -o TranslatedQuery.so
