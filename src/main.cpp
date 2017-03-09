@@ -70,6 +70,16 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 			all_local = 0;
 	}
 
+	if(order.pk_index.find(Predicate(o_id, d_id, w_id).pk_3int) == order.pk_index.end()){
+		order.data.push_back(*(new Order::Tuple(o_id, d_id, w_id, c_id, datetime, 0, items, all_local)));
+		order.pk_index.insert(make_pair(Predicate(o_id, d_id, w_id).pk_3int, order.data.size()-1));
+	} else return;
+
+
+	if(neworder.pk_index.find(Predicate(o_id, d_id, w_id).pk_3int) == neworder.pk_index.end()){
+		neworder.data.push_back(*(new NewOrder::Tuple(o_id, d_id, w_id)));
+		neworder.pk_index.insert(make_pair(Predicate(o_id, d_id, w_id).pk_3int, neworder.data.size()-1));
+	} else return;
 
 
 	for(int index = 0; index < items; ++index){
@@ -137,16 +147,6 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 
 	}
 	//-----end for -----//
-	if(order.pk_index.find(Predicate(o_id, d_id, w_id).pk_3int) == order.pk_index.end()){
-		order.data.push_back(*(new Order::Tuple(o_id, d_id, w_id, c_id, datetime, 0, items, all_local)));
-		order.pk_index.insert(make_pair(Predicate(o_id, d_id, w_id).pk_3int, order.data.size()-1));
-	} else return;
-
-
-	if(neworder.pk_index.find(Predicate(o_id, d_id, w_id).pk_3int) == neworder.pk_index.end()){
-		neworder.data.push_back(*(new NewOrder::Tuple(o_id, d_id, w_id)));
-		neworder.pk_index.insert(make_pair(Predicate(o_id, d_id, w_id).pk_3int, neworder.data.size()-1));
-	} else return;
 }
 
 
@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
 	cout << "NewOrder: " << neworder.data.size() << " tuples\n";
 	cout << "OrderLine: " << orderline.data.size() << " tuples\n";
 
-	size_t times = 100000;
+	size_t times = 1000000;
 	cout << "Executing "<< times<< " transactions ... \n";
 	auto start=high_resolution_clock::now();
 	for(size_t z = 0; z<times; z++){
