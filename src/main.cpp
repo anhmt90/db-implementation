@@ -82,6 +82,7 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	} else return;
 
 
+
 	for(int index = 0; index < items; ++index){
 		_item_itr = item.pk_index.find(Predicate(itemid[index]).pk_int);
 		if(_item_itr == item.pk_index.end()) return;
