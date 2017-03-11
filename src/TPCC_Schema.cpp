@@ -29,15 +29,6 @@ vector<string> split(const string &s) {
 	return splitted;
 }
 /*-----------------------------------------------------------------------------------------------------------------------*/
-//extern "C" TPCC::TPCC(){
-//	auto start=high_resolution_clock::now();
-//	_import();
-////	_importIndex();
-//	cout << "import " << duration_cast<duration<double>>(high_resolution_clock::now()-start).count() << "s" << endl;
-//
-//}
-
-
 /*-----------------------------------------------------------------------------------------------------------------------*/
 //std::ostream& operator<<(std::ostream& out,const w_Tuple& value);
 //For the two indexes
@@ -488,5 +479,296 @@ void Stock::import(){
 	}
 }
 
+/*---------------------------------------------------------Read functions----------------------------------------------------------*/
+
+Warehouse::Tuple* Warehouse::read(Integer pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+District::Tuple* District::read(tup_2Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+Customer::Tuple* Customer::read(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+NewOrder::Tuple* NewOrder::read(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+Order::Tuple* Order::read(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+OrderLine::Tuple* OrderLine::read(tup_4Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+Item::Tuple* Item::read(Integer pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
+
+Stock::Tuple* Stock::read(tup_2Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr == pk_index.end())
+		return nullptr;
+	return &data[itr->second];
+}
 
 
+/*---------------------------------------------------------Insert functions----------------------------------------------------------*/
+Warehouse::Tuple* Warehouse::insert(Warehouse::Tuple* t){
+	auto pkey = t->w_id;
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+District::Tuple* District::insert(District::Tuple* t){
+	auto pkey = make_tuple(t->d_id, t->d_w_id);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+Customer::Tuple* Customer::insert(Customer::Tuple* t){
+	auto pkey = make_tuple(t->c_id, t->c_d_id, t->c_w_id);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+
+
+NewOrder::Tuple* NewOrder::insert(NewOrder::Tuple* t){
+	auto pkey = make_tuple(t->no_o_id, t->no_d_id, t->no_w_id);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+Order::Tuple* Order::insert(Order::Tuple* t){
+	auto pkey = make_tuple(t->o_id, t->o_d_id, t->o_w_id);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+OrderLine::Tuple* OrderLine::insert(OrderLine::Tuple* t){
+	auto pkey = make_tuple(t->ol_o_id, t->ol_d_id, t->ol_w_id, t->ol_number);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+Item::Tuple* Item::insert(Item::Tuple* t){
+	auto pkey = t->i_id;
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+
+Stock::Tuple* Stock::insert(Stock::Tuple* t){
+	auto pkey = make_tuple(t->s_i_id, t->s_w_id);
+	if(pk_index.find(pkey) == pk_index.end()){
+		data.push_back(*t);
+		pk_index.insert(make_pair(pkey, data.size()-1));
+		return &data.back();
+	}
+	return nullptr;
+}
+/*---------------------------------------------------------Remove functions----------------------------------------------------------*/
+bool Warehouse::remove(Integer pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].w_id).pk_int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool District::remove(tup_2Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].d_id, data[index].d_w_id).pk_2int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool Customer::remove(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].c_id, data[index].c_d_id, data[index].c_w_id).pk_3int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool NewOrder::remove(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].no_o_id, data[index].no_d_id, data[index].no_w_id).pk_3int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool Order::remove(tup_3Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].o_id, data[index].o_d_id, data[index].o_w_id).pk_3int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool OrderLine::remove(tup_4Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].ol_o_id, data[index].ol_d_id, data[index].ol_w_id, data[index].ol_number).pk_4int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool Item::remove(Integer pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].i_id).pk_int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}
+
+bool Stock::remove(tup_2Int pkey){
+	auto itr = pk_index.find(pkey);
+	if(itr != pk_index.end()){
+		auto index = itr->second;
+		if(index == data.size()-1){
+			data.pop_back();
+			pk_index.erase(itr);
+			return true;
+		}
+		std::swap(data.back(), data[index]);
+		data.pop_back();
+		pk_index.erase(itr);
+		itr = pk_index.find(Predicate(data[index].s_i_id, data[index].s_w_id).pk_2int);
+		itr->second = index;
+		return true;
+	}
+	return false;
+}

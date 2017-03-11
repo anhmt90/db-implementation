@@ -32,6 +32,16 @@ typedef tuple<Integer, Integer, Integer, Integer> tup_4Int;
 
 
 
+
+typedef unordered_map<Integer, uint64_t> Warehouse_PK;
+typedef unordered_map<tup_2Int, uint64_t> District_PK;
+typedef unordered_map<tup_3Int, uint64_t> Customer_PK;
+typedef unordered_map<tup_3Int, uint64_t> NewOrder_PK;
+typedef unordered_map<tup_3Int, uint64_t> Order_PK;
+typedef unordered_map<tup_4Int, uint64_t> OrderLine_PK;
+typedef unordered_map<Integer, uint64_t> Item_PK;
+typedef unordered_map<tup_2Int, uint64_t> Stock_PK;
+
 /*---------------------------------------------------------Global variables/functions----------------------------------------------------------*/
 
 /*---------------------------------------------------------Supporting functions------------------------------------------------------*/
@@ -177,6 +187,10 @@ struct Warehouse : public Table{
 	}
 	virtual ~Warehouse(){};
 	void import();
+
+	Tuple* read(Integer);
+	Tuple* insert(Tuple*);
+	bool remove(Integer);
 };
 
 
@@ -226,6 +240,10 @@ struct District : public Table{
 	}
 	virtual ~District(){};
 	void import();
+
+	Tuple* read(tup_2Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_2Int);
 };
 
 
@@ -294,6 +312,10 @@ struct Customer : public Table{
 	}
 	virtual ~Customer(){};
 	void import();
+
+	Tuple* read(tup_3Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_3Int);
 };
 
 
@@ -352,7 +374,7 @@ struct NewOrder : public Table{
 	};
 	vector<NewOrder::Tuple> data;
 	unordered_map<tup_3Int, uint64_t> pk_index;
-
+	OrderLine_PK::iterator _orderline_itr;
 
 	NewOrder(){
 		this->name = "neworder";
@@ -361,6 +383,9 @@ struct NewOrder : public Table{
 	}
 	virtual ~NewOrder(){};
 	void import();
+	Tuple* read(tup_3Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_3Int);
 };
 
 
@@ -406,6 +431,9 @@ struct Order : public Table{
 	}
 	virtual ~Order(){};
 	void import();
+	Tuple* read(tup_3Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_3Int);
 };
 
 
@@ -453,6 +481,9 @@ struct OrderLine : public Table{
 	}
 	virtual ~OrderLine(){};
 	void import();
+	Tuple* read(tup_4Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_4Int);
 };
 
 
@@ -488,6 +519,10 @@ struct Item : public Table{
 	}
 	virtual ~Item(){};
 	void import();
+
+	Tuple* read(Integer);
+	Tuple* insert(Tuple*);
+	bool remove(Integer);
 
 };
 
@@ -533,6 +568,10 @@ struct Stock : public Table{
 	}
 	virtual ~Stock(){};
 	void import();
+
+	Tuple* read(tup_2Int);
+	Tuple* insert(Tuple*);
+	bool remove(tup_2Int);
 };
 
 
@@ -545,17 +584,5 @@ extern Order order;
 extern OrderLine orderline;
 extern Item item;
 extern Stock stock;
-
-
-
-typedef unordered_map<Integer, uint64_t> Warehouse_PK;
-typedef unordered_map<tup_2Int, uint64_t> District_PK;
-typedef unordered_map<tup_3Int, uint64_t> Customer_PK;
-typedef unordered_map<tup_3Int, uint64_t> NewOrder_PK;
-typedef unordered_map<tup_3Int, uint64_t> Order_PK;
-typedef unordered_map<tup_4Int, uint64_t> OrderLine_PK;
-typedef unordered_map<Integer, uint64_t> Item_PK;
-typedef unordered_map<tup_2Int, uint64_t> Stock_PK;
-
 
 #endif
