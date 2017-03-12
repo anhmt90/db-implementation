@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 		std::unique_ptr<Schema> schema = sp.parse();
 		//std::cout << schema->toString() << std::endl; // uncomment to see the parsed data of the schema
 		SemanticAnalyser semanal(move(schema));
-		cout<<"Type 'exit' to quit the console.\n";
+		cout<<"Type 'exit' to quit.\n";
 
 		while(true){
 			QueryParser qp;
