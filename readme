@@ -1,4 +1,4 @@
-1. Put the tbl-files into the folder named "tbl" so that the program can read them.
+1. Create two folders named "tbl" and "bin" in root folder and put the *.tbl-files into the "tbl" folder so that the program can import the data.
 2. Import the project in Eclipse IDE as New Makefile project to run it or use command " make && ./bin/main " to compile and run the program on linux shell.
 3. main() function is in cpp/main.cpp.
 4. The query that is parsed is stored in file '_task4_quer.sql' in the root folder.
