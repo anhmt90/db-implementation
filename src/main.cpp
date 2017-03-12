@@ -67,7 +67,8 @@ void delivery(int32_t w_id, int32_t o_carrier_id, Timestamp datetime){
 
 		Integer o_id = _min;
 		// delete
-		if(neworder.remove(Predicate(o_id, d_id, w_id).pk_3int) == false) return;
+//		if(neworder.remove(Predicate(o_id, d_id, w_id).pk_3int) == false) return; // uncomment this to abort the transaction in edge case
+		neworder.remove(Predicate(o_id, d_id, w_id).pk_3int);
 		// select
 		if(!(_order_tuple = order.read(Predicate(o_id, d_id, w_id).pk_3int))) return;
 		auto o_ol_cnt = _order_tuple->o_ol_cnt;
@@ -114,8 +115,10 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 			all_local = 0;
 	}
 	// insert
-	if(!(_order_tuple = order.insert(new Order::Tuple(o_id, d_id, w_id, c_id, datetime, 0, items, all_local)))) return;
-	if(!(_neworder_tuple = neworder.insert(new NewOrder::Tuple(o_id, d_id, w_id)))) return;
+	_order_tuple = order.insert(new Order::Tuple(o_id, d_id, w_id, c_id, datetime, 0, items, all_local));
+	//	if(!(_order_tuple = order.insert(new Order::Tuple(o_id, d_id, w_id, c_id, datetime, 0, items, all_local)))) return; // uncomment this to abort the transaction in edge case
+	_neworder_tuple = neworder.insert(new NewOrder::Tuple(o_id, d_id, w_id));
+	//	if(!(_neworder_tuple = neworder.insert(new NewOrder::Tuple(o_id, d_id, w_id)))) return; // uncomment this to abort the transaction in edge case
 
 	for(int index = 0; index <= items; ++index){
 		if(!(_item_tuple = item.read(Predicate(itemid[index]).pk_int))) return;
