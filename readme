@@ -1,4 +1,4 @@
-1. Create a folder named "tbl" in root folder and put the *.tbl-files into that folder so that the program can import the data.
+1. Create two folders named "tbl" and "bin" in root folder and put the *.tbl-files into the "tbl" folder so that the program can import the data.
 2. Import the project in Eclipse IDE as New Makefile project or use command " make && ./bin/main " to compile and run the program on linux shell.
 3. main() function is in src/main.cpp.
 4. The newOrder and the delivery transactions as well as the sumQuery is written as functions in main.cpp.

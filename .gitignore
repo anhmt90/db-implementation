@@ -1,5 +1,5 @@
-tbl/
-bin/
+tbl/*
+bin/*
 Debug/
 .settings/
 .cproject

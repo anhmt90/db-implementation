@@ -23,80 +23,6 @@ OrderLine::Tuple* _orderline_tuple;
 Item::Tuple* _item_tuple;
 Stock::Tuple* _stock_tuple;
 
-int64_t sumQuery(){
-	int64_t sum = 0;
-	unordered_map<tup_3Int, tuple<Integer, Integer, Integer, Numeric<2,0>>> hashTable1;
-	unordered_map<tup_3Int, tuple<Numeric<12,2>, Numeric<2,0>>> hashTable2;
-	for(auto& _order : order.data){
-		auto tupK = make_tuple(_order.o_c_id, _order.o_d_id, _order.o_w_id);
-		auto tupV = make_tuple(_order.o_id, _order.o_d_id, _order.o_w_id, _order.o_ol_cnt);
-		hashTable1.insert(make_pair(tupK, tupV));
-	}
-	for(auto& _customer : customer.data){
-		if(_customer.c_last.value[0] == 'B'){
-			auto ht1_itr = hashTable1.find(make_tuple(_customer.c_id, _customer.c_d_id, _customer.c_w_id));
-			if(ht1_itr != hashTable1.end()){
-				auto tupK = make_tuple(get<0>(ht1_itr->second), get<1>(ht1_itr->second), get<2>(ht1_itr->second));
-				auto tupV = make_tuple(_customer.c_balance, get<3>(ht1_itr->second));
-				hashTable2.insert(make_pair(tupK,tupV));
-			}
-		}
-	}
-	for(auto& _orderline : orderline.data){
-		auto ht2_itr = hashTable2.find(make_tuple(_orderline.ol_o_id, _orderline.ol_d_id, _orderline.ol_w_id));
-		if(ht2_itr != hashTable2.end()){
-			Numeric<12,2> c_balance = get<0>(ht2_itr->second);
-			Numeric<2,0> o_ol_cnt = get<1>(ht2_itr->second);
-			sum+= (_orderline.ol_quantity.value * _orderline.ol_amount.value) - (c_balance.value*o_ol_cnt.value);
-		}
-	}
-	return sum;
-}
-
-
-
-void delivery(int32_t w_id, int32_t o_carrier_id, Timestamp datetime){
-	for(int32_t d_id = 1; d_id<=10; ++d_id){
-		Integer _min = INT32_MAX;
-		for(auto& _neworder : neworder.data){
-			if(_neworder.no_d_id == d_id && _neworder.no_w_id == w_id)
-				_min = min(_min,_neworder.no_o_id);
-		}
-		if(_min == INT32_MAX)
-			continue;
-
-		Integer o_id = _min;
-		// delete
-//		if(neworder.remove(Predicate(o_id, d_id, w_id).pk_3int) == false) return; // uncomment this to abort the transaction in edge case
-		neworder.remove(Predicate(o_id, d_id, w_id).pk_3int);
-		// select
-		if(!(_order_tuple = order.read(Predicate(o_id, d_id, w_id).pk_3int))) return;
-		auto o_ol_cnt = _order_tuple->o_ol_cnt;
-		auto o_c_id = _order_tuple->o_c_id;
-		// update
-		if((_order_tuple = order.read(Predicate(o_id, d_id, w_id).pk_3int))){
-			_order_tuple->o_carrier_id = o_carrier_id;
-		}
-		Numeric<6,2> ol_total=0;
-		for(int32_t ol_number = 1; Numeric<2,0>(ol_number) <= o_ol_cnt; ol_number++){
-			if(!(_orderline_tuple = orderline.read(Predicate(o_id, d_id, w_id, ol_number).pk_4int))) return;
-			auto ol_amount = _orderline_tuple->ol_amount;
-			ol_total = ol_total + ol_amount;
-			//update
-			if((_orderline_tuple = orderline.read(Predicate(o_id, d_id, w_id, ol_number).pk_4int))){
-				_orderline_tuple->ol_delivery_d = datetime;
-			}
-		}
-		// update
-		if((_customer_tuple = customer.read(Predicate(o_c_id, d_id, w_id).pk_3int))){
-			_customer_tuple->c_balance = _customer_tuple->c_balance + ol_total.castS<12>();
-		}
-
-	}
-}
-
-
-
 void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t supware[15], int32_t itemid[15], int32_t qty[15], Timestamp datetime){
 
 	if(!(_warehouse_tuple = warehouse.read(Predicate(w_id).pk_int))) return;
@@ -204,99 +130,18 @@ void newOrderRandom(Timestamp now) {
 	newOrder(w_id,d_id,c_id,ol_cnt,supware,itemid,qty,now);
 }
 
-void deliveryRandom(Timestamp now) {
-	delivery(urand(1,warehouses),urand(1,10),now);
-}
 
-
-
-
-void oltp(Timestamp now) {
-	int rnd=urand(1,100);
-	if (rnd<=10) {
-		deliveryRandom(now);
-	} else {
-		newOrderRandom(now);
-	}
-}
-
-
-
-
-//atomic<short> loop;
-void CHILD_handler(int signum, siginfo_t* si, void* uc){
-	int status = 0;
-	pid_t childPID = wait(&status);
-	cout<<"Child with PID " << childPID << " has terminated.\n";
-
-	struct timespec forkStart, forkEnd;
-	clock_gettime(CLOCK_REALTIME, &forkStart);
-	pid_t pid = fork();
-	clock_gettime(CLOCK_REALTIME, &forkEnd);
-
-	cout<<"PID returned from fork:" << pid << "\n";
-	cout << "fork() took "  << (forkEnd.tv_sec - forkStart.tv_sec)
-										+ ( forkEnd.tv_nsec - forkStart.tv_nsec )/1E9<< "s to run.\n";
-	if(pid == 0){
-		auto start=high_resolution_clock::now();
-		cout <<  "Query returns: " << (Numeric<12,2>) sumQuery();
-		auto end = duration_cast<duration<double>>(high_resolution_clock::now()-start).count();
-		cout << ", accomplished in " << end << "s\n";
-		_exit(0);
-	} else if (pid == -1){
-		cerr << "Fork failed!\n";
-		}
-}
-
-int main(int argc, char* argv[]) {
+int main() {
 	size_t times = 1000000;
 
-	for(unsigned i = 1 ; i<=10; ++i){
-		auto start=high_resolution_clock::now();
-		cout <<  "Query " << i << " returns: " << (Numeric<12,2>) sumQuery();
-		auto end = duration_cast<duration<double>>(high_resolution_clock::now()-start).count();
-		cout <<  ", accomplished in " << end << "s\n";
-	}
-
-	struct sigaction sa;
-	sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_sigaction = CHILD_handler;
-	sigaction(SIGCHLD, &sa, NULL);
-
-	struct timespec forkStart, forkEnd;
-	clock_gettime(CLOCK_REALTIME, &forkStart);
-	pid_t pid = fork();
-	cout<<"PID returned from fork:" << pid << "\n";
-	clock_gettime(CLOCK_REALTIME, &forkEnd);
-	cout << "fork() took "  << (forkEnd.tv_sec - forkStart.tv_sec)
-			+ ( forkEnd.tv_nsec - forkStart.tv_nsec )/1E9<< "s to run.\n";
-
-	if(pid == 0){
-		auto start=high_resolution_clock::now();
-		cout <<  "Query returns: " << (Numeric<12,2>) sumQuery();
-		auto end = duration_cast<duration<double>>(high_resolution_clock::now()-start).count();
-		cout << ", accomplished in " << end << "s\n";
-		_exit(0);
-	} else if (pid == -1){
-		cerr << "Fork failed!\n";
-	}
-
 	cout << endl;
-	cout << "PK Index of Order: " << order.pk_index.size() << " indexes\n";
-	cout << "PK Index of NewOrder: " << neworder.pk_index.size() << " indexes\n";
-	cout << "PK Index of OrderLine: " << orderline.pk_index.size() << " indexes\n\n";
-
 	cout << "Order: " << order.data.size() << " tuples\n";
 	cout << "NewOrder: " << neworder.data.size() << " tuples\n";
 	cout << "OrderLine: " << orderline.data.size() << " tuples\n";
-	cout << "Executing "<< times<< " transactions newOrder and delivery mixed... \n\n";
+	cout << "Executing "<< times<< " transactions newOrder... \n\n";
 	auto start=high_resolution_clock::now();
 	for(size_t i = 0; i<times; i++){
-//		newOrderRandom(0);
-		oltp(0);
-//		deliveryRandom(0);
-//		cout << fixed<< sumQuery() <<"!\n";
+		newOrderRandom(0);
 	}
 	auto end = duration_cast<duration<double>>(high_resolution_clock::now()-start).count();
 	cout << "Transactions accomplished in " << end << "s\n";
@@ -306,8 +151,4 @@ int main(int argc, char* argv[]) {
 	cout << "Order: " << order.data.size() << " tuples\n";
 	cout << "NewOrder: " << neworder.data.size() << " tuples\n";
 	cout << "OrderLine: " << orderline.data.size() << " tuples\n";
-
-	cout << "PK Index of Order: " << order.pk_index.size() << " indexes\n";
-	cout << "PK Index of NewOrder: " << neworder.pk_index.size() << " indexes\n";
-	cout << "PK Index of OrderLine: " << orderline.pk_index.size() << " indexes\n\n";
 }
