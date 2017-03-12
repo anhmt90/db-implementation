@@ -24,7 +24,7 @@ bin/%.o: src/%.cpp
 #	/usr/bin/g++ -o$@ -c $(CXXFLAGS) $(DEPTRACKING) $< 
 	
 	
-obj:=bin/Attribute.o bin/Table.o  bin/TPCC_Schema.o bin/Types.o 
+obj:=bin/Attribute.o bin/Table.o bin/Parser.o bin/Query.o bin/Schema.o bin/TPCC_Schema.o bin/Types.o bin/SemanticAnalyser.o bin/Operator.o
 
 bin/main: bin/main.o $(obj)
 	#g++ -std=c++11 -g -O3 -Wall -fPIC -rdynamic TranslatedQuery.cpp -shared -o TranslatedQuery.so

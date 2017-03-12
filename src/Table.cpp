@@ -8,9 +8,7 @@
 #include "Table.hpp"
 
 vector<Table> tables;
-//
-//void Warehouse_Table::insert(Warehouse_Tuple t) {
-//
-//}
+
+
 
 

@@ -1,5 +1,5 @@
-#ifndef H_Table_HPP
-#define H_Table_HPP
+#ifndef H_Table
+#define H_Table
 //---------------------------------------------------------------------------
 
 #include <fstream>
@@ -9,7 +9,6 @@
 
 #include "Attribute.hpp"
 #include "Types.hpp"
-
 //---------------------------------------------------------------------------
 /// A database table
 using namespace std;
@@ -19,34 +18,33 @@ using namespace std;
 //}
 //bool sortByType (const Attribute& lhs, const Attribute& rhs);
 
-struct Table;
-
-extern vector<Table> tables;
-
-struct Table
+class Table
 {
+public:
+
    /// Table name
    string name;
-   /// List of attributes
+   /// The attributes
    vector<Attribute> attributes;
-   /// List of primary keys
+   /// Indexes of the pkeys in attributes
    std::vector<unsigned> primaryKey;
-   /// Count of rows
-   size_t size;
-   /// Constructor
+   /// Constructors
    Table(){};
+   Table(const string name):name(name){};
    /// Destructor
    ~Table(){};
 
-
 //   virtual insert()
    bool operator==(const Table& table) const{
-	   return (name == table.name) && (attributes == table.attributes) && (size == table.size) && (primaryKey == table.primaryKey);
+	   return (name == table.name) && (attributes == table.attributes)  && (primaryKey == table.primaryKey);
    }
    bool operator!=(const Table& table) const{
-	   return !((name == table.name) && (attributes == table.attributes) && (size == table.size) && (primaryKey == table.primaryKey));
+	   return !((name == table.name) && (attributes == table.attributes) && (primaryKey == table.primaryKey));
    }
 
 };
+
+extern vector<Table> tables;
 //---------------------------------------------------------------------------
 #endif
+

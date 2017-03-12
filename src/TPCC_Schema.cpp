@@ -87,9 +87,10 @@ void Warehouse::import(){
 			tables.back().attributes.push_back(Attribute("w_zip","Char<9>","warehouse"));
 			tables.back().attributes.push_back(Attribute("w_tax","Numeric<4,4>","warehouse"));
 			tables.back().attributes.push_back(Attribute("w_ytd","Numeric<12,2>","warehouse"));
+
+			tables.back().primaryKey = {1};
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "Warehouse imported!\n";
 	}
 }
@@ -137,9 +138,10 @@ void District::import() {
 			tables.back().attributes.push_back(Attribute("d_tax","Numeric<4,4>","district"));
 			tables.back().attributes.push_back(Attribute("d_ytd","Numeric<12,2>","district"));
 			tables.back().attributes.push_back(Attribute("d_next_o_id","Integer","district"));
+
+			tables.back().primaryKey = {1,2};
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "District imported!\n";
 
 	}
@@ -210,7 +212,6 @@ void Customer::import(){
 			tables.back().attributes.push_back(Attribute("c_data","Varchar<500","customer"));
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "Customer imported!\n";
 
 	}
@@ -245,7 +246,6 @@ void History::import(){
 			}
 		}
 		close_ifstream(itbl);
-//		tables.back().size = data.size();
 		cout << "History imported!\n";
 	}
 }
@@ -279,7 +279,6 @@ void NewOrder::import(){
 
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "NewOrder imported!\n";
 	}
 }
@@ -324,7 +323,6 @@ void Order::import(){
 			tables.back().attributes.push_back(Attribute("o_all_local","Numeric<1,0>","order"));
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "Order imported!\n";
 	}
 }
@@ -371,7 +369,6 @@ void OrderLine::import(){
 			tables.back().attributes.push_back(Attribute("ol_dist_info","Char<24>","orderline"));
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "OrderLine imported!\n";
 	}
 }
@@ -409,7 +406,6 @@ void Item::import(){
 
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "Item imported!\n";
 	}
 }
@@ -474,7 +470,6 @@ void Stock::import(){
 
 		}
 		close_ifstream(itbl);
-		tables.back().size = data.size();
 		cout << "Stock imported!\n";
 	}
 }
