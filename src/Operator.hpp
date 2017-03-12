@@ -8,15 +8,15 @@
 #ifndef H_OPERATORS_OPERATOR_HPP
 #define H_OPERATORS_OPERATOR_HPP
 
-#include <iostream>
-#include <fstream>
+#include <string>
+#include <utility>
+#include <vector>
 
-//#include "Table.hpp"
-#include "Query.hpp"
 #include "Attribute.hpp"
+#include "Query.hpp"
+#include "Table.hpp"
 
 using namespace std;
-
 
 class Operator {
 private:

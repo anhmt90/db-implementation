@@ -7,8 +7,6 @@
 #include "Attribute.hpp"
 #include "Table.hpp"
 
-//#include "../Task02/Schema.cpp"
-
 struct Schema {
 //   struct Relation {
 //      struct Attribute {

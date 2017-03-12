@@ -1,6 +1,5 @@
 #include "Parser.hpp"
 #include "TPCC_Schema.hpp"
-//#include "..Types.hpp"
 
 #include <iostream>
 #include <iterator>

@@ -2,13 +2,12 @@
 
 using namespace std;
 
-std::ofstream ofs;
-
 //unique_ptr<Query>  Operator::init(unique_ptr<Query> query){
 //
 //	return move(query);
 //}
 
+ofstream ofs;
 
 void Operator::setConsumer(Operator* consumer) {
 		this->consumer =consumer;

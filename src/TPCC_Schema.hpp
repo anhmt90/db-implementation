@@ -7,21 +7,17 @@
 #ifndef H_TPCC_SCHEMA
 #define H_TPCC_SCHEMA
 
-#include <fstream>
-#include <sstream>
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <unordered_map>
-#include <map>
-#include <utility>
 #include <vector>
-#include <algorithm>
 #include <chrono>
-#include <atomic>
 
-#include "Types.hpp"
 #include "Table.hpp"
+#include "Types.hpp"
 
 using namespace std;
 using namespace std::chrono;
