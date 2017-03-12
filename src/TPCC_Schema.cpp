@@ -5,6 +5,7 @@
 Warehouse warehouse;
 District district;
 Customer customer;
+History history;
 NewOrder neworder;
 Order order;
 OrderLine orderline;

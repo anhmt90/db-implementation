@@ -10,17 +10,17 @@ std::string type(const Attribute& attr) {
 
       case parserTypes::Tag::Numeric: {
          std::stringstream ss;
-         ss << "Numeric(" << attr.len << ", " << attr.dec << ")";
+         ss << "Numeric<" << attr.len << "," << attr.dec << ">";
          return ss.str();
       }
       case parserTypes::Tag::Char: {
          std::stringstream ss;
-         ss << "Char(" << attr.len << ")";
+         ss << "Char<" << attr.len << ">";
          return ss.str();
       }
       case parserTypes::Tag::Varchar: {
     	  std::stringstream ss;
-    	  ss << "Varchar(" << attr.len << ")";
+    	  ss << "Varchar<" << attr.len << ">";
     	  return ss.str();
       }
       case parserTypes::Tag::Timestamp: {
@@ -33,7 +33,7 @@ std::string type(const Attribute& attr) {
 
 std::string Schema::toString() const {
    std::stringstream out;
-   for (const Table& rel : relations) {
+   for (const auto& rel : relations) {
       out << rel.name << std::endl;
       out << "\tPrimary Key:";
       for (unsigned keyId : rel.primaryKey)
