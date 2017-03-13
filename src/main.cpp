@@ -110,7 +110,7 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	auto d_tax = _district_tuple->d_tax;
 
 	uint32_t all_local = 1;
-	for(int index = 0; index < items; ++index){
+	for(int index = 0; index < items-1; ++index){
 		if(w_id != supware[index])
 			all_local = 0;
 	}
@@ -120,7 +120,7 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	_neworder_tuple = neworder.insert(new NewOrder::Tuple(o_id, d_id, w_id));
 	//	if(!(_neworder_tuple = neworder.insert(new NewOrder::Tuple(o_id, d_id, w_id)))) return; // uncomment this to abort the transaction in edge case
 
-	for(int index = 0; index <= items; ++index){
+	for(int index = 0; index <= items-1; ++index){
 		if(!(_item_tuple = item.read(Predicate(itemid[index]).pk_int))) return;
 		auto i_price = _item_tuple->i_price;
 
