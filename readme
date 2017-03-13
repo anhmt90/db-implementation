@@ -1,4 +1,4 @@
-MASTER branch is task1
+Branch MASTER is task1
 
 1. Create two folders named "tbl" and "bin" in root folder and put the *.tbl-files into the "tbl" folder so that the program can import the data.
 2. Import the project in Eclipse IDE as New Makefile project or use command " make && ./bin/main " to compile and run the program on linux shell.
