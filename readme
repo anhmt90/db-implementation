@@ -1,5 +1,5 @@
 1. Create two folders named "tbl" and "bin" in root folder and put the *.tbl-files into the "tbl" folder so that the program can import the data.
 2. Import the project in Eclipse IDE as New Makefile project or use command " make && ./bin/main " to compile and run the program on linux shell.
-3. main() function is in cpp/main.cpp.
-4. The program can process queries WITHOUT a semicolon ";" at the end of the statements.
+3. main() function is in src/main.cpp.
+4. The program can only process queries WITHOUT a semicolon ";" at the end of the statements.
 5. The programm is built and tested on Eclipse IDE neon.1 on Xubuntu 16.04 LTS.
