@@ -1,8 +1,7 @@
-The practical course comprises weekly assignments for the first 5 weeks and a [final project](#final-project) spanning the last 9 weeks. For more details, see https://db.in.tum.de/teaching/ws1617/imlab/?lang=en
+The practical course comprises weekly assignments for the first 5 weeks and a [final project](#final_project) spanning the last 9 weeks. For more details, see https://db.in.tum.de/teaching/ws1617/imlab/?lang=en
 
 # Weekly Tasks
 
----
 
 ### Task 1
 
@@ -61,9 +60,7 @@ The practical course comprises weekly assignments for the first 5 weeks and a [f
 4. The program can only process queries WITHOUT a semicolon ";" at the end of the statements.
 5. The programm is built and tested on Eclipse IDE neon.1 on Xubuntu 16.04 LTS.
 
-
-# Final Project: Implementing the MVCC feature of the DBMS Hekaton {#final-project}
-
----
+<a name="final_project"></a>
+# Final Project Implementing the MVCC feature of Hekaton
 
 Repo: https://github.com/anhmt90/hekaton-db
