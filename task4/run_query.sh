@@ -1,0 +1,1 @@
+g++ -O3 -std=c++11 -fPIC -rdynamic TranslatedQuery.cpp -shared -o TranslatedQuery.so
