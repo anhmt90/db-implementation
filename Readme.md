@@ -61,6 +61,6 @@ The practical course comprises weekly assignments for the first 5 weeks and a [f
 5. The programm is built and tested on Eclipse IDE neon.1 on Xubuntu 16.04 LTS.
 
 <a name="final_project"></a>
-# Final Project Implementing the MVCC feature of Hekaton
+# Final Project Implementing the MVCC feature of Hekaton DBMS
 
 Repo: https://github.com/anhmt90/hekaton-db
